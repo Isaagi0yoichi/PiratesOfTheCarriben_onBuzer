@@ -1,0 +1,50 @@
+#include "pitches.h"
+
+#define BUZZER 9  // Buzzer connected to pin 9
+
+// LED pins
+int leds[] = {2, 3, 4, 5, 6}; 
+
+// Pirates of the Caribbean melody
+int melody[] = {
+  NOTE_E4, NOTE_G4, NOTE_A4, NOTE_E4, NOTE_B4, NOTE_C5, NOTE_D5, NOTE_A4,
+  NOTE_B4, NOTE_E5, NOTE_E5, NOTE_E5, NOTE_F5, NOTE_E5, NOTE_D5, NOTE_C5, NOTE_B4,
+  NOTE_A4, NOTE_A4, NOTE_B4, NOTE_C5, NOTE_D5, NOTE_E5, NOTE_C5, NOTE_E4,
+  NOTE_E4, NOTE_A4, NOTE_G4, NOTE_A4, NOTE_B4, NOTE_G4, NOTE_A4, NOTE_B4
+};
+
+// Note durations: 4 = quarter note, 8 = eighth note, etc.
+int noteDurations[] = {
+  8, 8, 4, 8, 8, 4, 8, 8,
+  4, 8, 8, 8, 8, 4, 8, 8, 4,
+  8, 8, 4, 8, 8, 4, 8, 8,
+  4, 8, 8, 4, 8, 8, 4, 8
+};
+
+void setup() {
+  pinMode(BUZZER, OUTPUT);
+
+  // Set LED pins as output
+  for (int i = 0; i < 5; i++) {
+    pinMode(leds[i], OUTPUT);
+  }
+}
+
+void loop() {
+  for (int i = 0; i < 32; i++) {
+    int noteDuration = 1000 / noteDurations[i];  // Convert to milliseconds
+
+    tone(BUZZER, melody[i], noteDuration);
+
+    // Blink LEDs in a sequence
+    digitalWrite(leds[i % 5], HIGH);
+    delay(noteDuration * 1.3);
+    digitalWrite(leds[i % 5], LOW);
+
+    noTone(BUZZER);
+    delay(50); // Short pause between notes
+  }
+
+  delay(2000); // Pause before playing again
+}
+
